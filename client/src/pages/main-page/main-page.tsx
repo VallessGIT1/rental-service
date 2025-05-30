@@ -2,12 +2,31 @@ import {Logo} from "../../components/logo/logo";
 import {CitiesCardList} from "../../components/cities-card-list/cities-card-list";
 import {offers} from "../../mocks/offers";
 import {OffersList} from "../../types/offer";
+import CityMap from "../../components/map/map";
 
 type MainPageProps = {
   offersList: OffersList[]
 }
 
 function MainPage({offersList} : MainPageProps) {
+
+  const amsterdamOffers = offersList.filter(offer => offer.city.name === 'Amsterdam');
+
+  const points = amsterdamOffers.map(offer => ({
+    id: offer.id.toString(),
+    latitude: offer.location.latitude,
+    longitude: offer.location.longitude,
+    title: offer.title,
+  }));
+
+  const amsterdamLocation = {
+    latitude: 52.374,
+    longitude: 4.9,
+    zoom: 12,
+  };
+
+  console.log(points)
+
   return (
       <div className="page page--gray page--main">
         <header className="header">
@@ -115,7 +134,7 @@ function MainPage({offersList} : MainPageProps) {
                 </div>
               </section>
               <div className="cities__right-section">
-                <section className="cities__map map"></section>
+                <CityMap cityLocation={amsterdamLocation} points={points}/>
               </div>
             </div>
           </div>
