@@ -1,21 +1,20 @@
-import {CitiesCard} from "../../components/cities-card/cities-card";
+import {Logo} from "../../components/logo/logo";
+import {CitiesCardList} from "../../components/cities-card-list/cities-card-list";
+import {offers} from "../../mocks/offers";
+import {OffersList} from "../../types/offer";
 
-function MainPage() {
+type MainPageProps = {
+  offersList: OffersList[]
+}
+
+function MainPage({offersList} : MainPageProps) {
   return (
       <div className="page page--gray page--main">
         <header className="header">
           <div className="container">
             <div className="header__wrapper">
               <div className="header__left">
-                <a className="header__logo-link header__logo-link--active">
-                  <img
-                      className="header__logo"
-                      src="img/logo.svg"
-                      alt="Rent service logo"
-                      width="81"
-                      height="41"
-                  />
-                </a>
+                <Logo/>
               </div>
               <nav className="header__nav">
                 <ul className="header__nav-list">
@@ -112,11 +111,7 @@ function MainPage() {
                   </ul>
                 </form>
                 <div className="cities__places-list places__list tabs__content">
-                  <CitiesCard/>
-                  <CitiesCard/>
-                  <CitiesCard/>
-                  <CitiesCard/>
-                  <CitiesCard/>
+                  <CitiesCardList offerList={offersList}/>
                 </div>
               </section>
               <div className="cities__right-section">
