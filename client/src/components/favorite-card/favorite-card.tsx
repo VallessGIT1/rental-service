@@ -1,12 +1,16 @@
 import {FullOffer} from '../../types/offer';
+import {useState} from "react";
+import {AppRoute} from "../../const";
+import {Link} from "react-router-dom";
 
 type FavoriteCardProps = {
     offer: FullOffer;
 };
 
 function FavoriteCard({offer}: FavoriteCardProps) {
+    const [, setOfferId]  = useState('')
     return (
-        <article className="favorites__card place-card">
+        <article className="favorites__card place-card" onMouseOver={() => setOfferId(offer.id)} onMouseOut={() => setOfferId('')}>
             {
                 offer.isPremium &&
                 <div className="place-card__mark">
@@ -14,9 +18,9 @@ function FavoriteCard({offer}: FavoriteCardProps) {
                 </div>
             }
             <div className="favorites__image-wrapper place-card__image-wrapper">
-                <a href="#">
+                <Link to={`${AppRoute.Offer}/${offer.id}`}>
                     <img className="place-card__image" src={offer.images[0]} width="150" height="110" alt="Place image"/>
-                </a>
+                </Link>
             </div>
             <div className="favorites__card-info place-card__info">
                 <div className="place-card__price-wrapper">
