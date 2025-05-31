@@ -1,140 +1,61 @@
-import {Logo} from "../../components/logo/logo";
-import {CitiesCardList} from "../../components/cities-card-list/cities-card-list";
-import {offers} from "../../mocks/offers";
-import {OffersList} from "../../types/offer";
-import CityMap from "../../components/map/map";
+import {CitiesCardList} from "../../components/cities-card-list/cities-card-list"
+import {SortOptions} from "../../components/sort-options/sort-options"
+import {CitiesList} from "../../components/cities-list/cities-list"
+import {Logo} from "../../components/logo/logo"
+import CityMap from "../../components/map/map"
+import {OfferList} from "../../types/offer"
+import {getOffersByCity, sortOffersByType} from "../../utils"
+import {useAppSelector} from "../../hooks"
+import {SortOffer} from "../../types/sort"
+import {useState} from "react"
+import {Header} from "../../components/header/header";
 
-type MainPageProps = {
-  offersList: OffersList[]
-}
 
-function MainPage({offersList} : MainPageProps) {
+function MainPage() {
 
-  const amsterdamOffers = offersList.filter(offer => offer.city.name === 'Amsterdam');
+  const selectedCity = useAppSelector((state) => state.city)
+  const [selectedSort, setSelectedSort] = useState<SortOffer>('Popular')
 
-  const points = amsterdamOffers.map(offer => ({
-    id: offer.id.toString(),
-    latitude: offer.location.latitude,
-    longitude: offer.location.longitude,
-    title: offer.title,
-  }));
+  const offers = useAppSelector((state) => state.offers)
 
-  const amsterdamLocation = {
-    latitude: 52.374,
-    longitude: 4.9,
-    zoom: 12,
-  };
+  const selectedCityOffers = getOffersByCity(selectedCity?.name, offers)
+  const [selectedOffer, setSelectedOffer] = useState<OfferList | undefined>()
 
-  console.log(points)
+  const handleListItemHover = (offerId: string | null) => {
+    const currentOffer = offers.find((offer) => offer.id === offerId);
+    setSelectedOffer(currentOffer);
+  }
+
+  const points =
+      (selectedOffer ? [selectedOffer] : selectedCityOffers)
+      .map(offer => ({
+        id: offer.id.toString(),
+        latitude: offer.location.latitude,
+        longitude: offer.location.longitude,
+        title: offer.title,
+      }))
 
   return (
       <div className="page page--gray page--main">
-        <header className="header">
-          <div className="container">
-            <div className="header__wrapper">
-              <div className="header__left">
-                <Logo/>
-              </div>
-              <nav className="header__nav">
-                <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <a
-                        className="header__nav-link header__nav-link--profile"
-                        href="#"
-                    >
-                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                      <span className="header__user-name user__name">
-                      Myemail@gmail.com
-                    </span>
-                      <span className="header__favorite-count">3</span>
-                    </a>
-                  </li>
-                  <li className="header__nav-item">
-                    <a className="header__nav-link" href="#">
-                      <span className="header__signout">Sign out</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </header>
-
+        <Header/>
         <main className="page__main page__main--index">
           <h1 className="visually-hidden">Cities</h1>
           <div className="tabs">
             <section className="locations container">
-              <ul className="locations__list tabs__list">
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Paris</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Cologne</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Brussels</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item tabs__item--active">
-                    <span>Amsterdam</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Hamburg</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Dusseldorf</span>
-                  </a>
-                </li>
-              </ul>
+              <CitiesList selectedCity={selectedCity}/>
             </section>
           </div>
           <div className="cities">
             <div className="cities__places-container container">
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
-                <b className="places__found">312 places to stay in Amsterdam</b>
-                <form className="places__sorting" action="#" method="get">
-                  <span className="places__sorting-caption">Sort by</span>
-                  <span className="places__sorting-type" tabIndex={0}>
-                  Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use href="#icon-arrow-select"></use>
-                  </svg>
-                </span>
-                  <ul className="places__options places__options--custom places__options--opened">
-                    <li
-                        className="places__option places__option--active"
-                        tabIndex={0}
-                    >
-                      Popular
-                    </li>
-                    <li className="places__option" tabIndex={0}>
-                      Price: low to high
-                    </li>
-                    <li className="places__option" tabIndex={0}>
-                      Price: high to low
-                    </li>
-                    <li className="places__option" tabIndex={0}>
-                      Top rated first
-                    </li>
-                  </ul>
-                </form>
-                <div className="cities__places-list places__list tabs__content">
-                  <CitiesCardList offerList={offersList}/>
-                </div>
+                <b className="places__found">{selectedCityOffers.length} places to stay
+                  in {selectedCity.name}</b>
+                <SortOptions activeSorting={selectedSort} onChange={(newSorting) => setSelectedSort(newSorting)}/>
+                <CitiesCardList offerList={sortOffersByType(selectedCityOffers, selectedSort)} onListItemHover={handleListItemHover}/>
               </section>
               <div className="cities__right-section">
-                <CityMap cityLocation={amsterdamLocation} points={points}/>
+                <CityMap cityLocation={selectedCity.location} points={points}/>
               </div>
             </div>
           </div>

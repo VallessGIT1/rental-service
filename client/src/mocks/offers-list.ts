@@ -1,7 +1,7 @@
-import {FullOffer, OffersList} from '../types/offer';
+import {FullOffer, OfferList} from '../types/offer';
 import {offers} from "./offers";
 
-export const offersList: OffersList[] = offers.map((offer: FullOffer): OffersList => ({
+export const offersList: OfferList[] = offers.map((offer: FullOffer): OfferList => ({
     id: offer.id,
     title: offer.title,
     type: offer.type,

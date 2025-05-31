@@ -5,21 +5,20 @@ import {Favorites} from '../../pages/favorites/favorites'
 import {MainPage} from "../../pages/main-page/main-page"
 import {Login} from '../../pages/login/login'
 import {Offer} from '../../pages/offer/offer'
-import {CityFavorites, FullOffer, OffersList} from "../../types/offer"
+import {CityFavorites, FullOffer, OfferList} from "../../types/offer"
 import {AuthorizationStatus} from "../../const"
 import {AppRoute} from "../../const"
 
 type AppMainPageProps = {
     offers: FullOffer[],
-    offersList: OffersList[],
     savedOffers: CityFavorites[]
 }
 
-function App({offers, offersList, savedOffers}: AppMainPageProps) {
+function App({offers, savedOffers}: AppMainPageProps) {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path={AppRoute.Main} element={<MainPage offersList={offersList}/>}/>
+                <Route path={AppRoute.Main} element={<MainPage/>}/>
                 <Route path={AppRoute.Login} element={<Login/>}/>
                 {/*<Route path={AppRoute.Favorites} element={*/}
                 {/*    <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>*/}

@@ -1,10 +1,11 @@
 import {useParams} from 'react-router-dom';
 import {FullOffer, mapFullOfferToOffersList} from '../../types/offer';
 import {PageNotFound} from "../../components/not-found/not-found";
-import {Logo} from "../../components/logo/logo";
 import {CommentForm} from "../../components/comment-form/comment-form";
 import CityMap from "../../components/map/map";
-import {CitiesCardList} from "../cities-card/cities-card-list";
+import {CitiesList} from "../../components/cities-list/cities-list";
+import {Header} from "../../components/header/header";
+import {CitiesCardList} from "../../components/cities-card-list/cities-card-list";
 
 type OfferProps = {
     offers: FullOffer[];
@@ -35,36 +36,13 @@ function Offer({offers}: OfferProps) {
             }))
     ];
 
-    const otherOffers = mapFullOfferToOffersList(offers.filter(offer => offer.city.name === offer.city.name));
+    const otherOffers = mapFullOfferToOffersList(offers)
+    .filter(other => other.id !== offer.id && other.city.name === offer.city.name)
+
 
     return (
         <div className="page">
-            <header className="header">
-                <div className="container">
-                    <div className="header__wrapper">
-                        <div className="header__left">
-                            <Logo/>
-                        </div>
-                        <nav className="header__nav">
-                            <ul className="header__nav-list">
-                                <li className="header__nav-item user">
-                                    <a className="header__nav-link header__nav-link--profile" href="#">
-                                        <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                                        <span className="header__user-name user__name">Myemail@gmail.com</span>
-                                        <span className="header__favorite-count">3</span>
-                                    </a>
-                                </li>
-                                <li className="header__nav-item">
-                                    <a className="header__nav-link" href="#">
-                                        <span className="header__signout">Sign out</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </header>
-
+            <Header/>
             <main className="page__main page__main--offer">
                 <section className="offer">
                     <div className="offer__gallery-container container">
@@ -92,7 +70,6 @@ function Offer({offers}: OfferProps) {
                                     <span className="visually-hidden">To bookmarks</span>
                                 </button>
                             </div>
-                            <p>{offer.type}</p>
                             <div className="offer__rating rating">
                                 <div className="offer__stars rating__stars">
                                     <span style={{width: "80%"}}></span>
@@ -102,18 +79,12 @@ function Offer({offers}: OfferProps) {
                             </div>
                             <ul className="offer__features">
                                 <li className="offer__feature offer__feature--entire">
-                                    Apartment
-                                </li>
-                                <li className="offer__feature offer__feature--bedrooms">
-                                    3 Bedrooms
-                                </li>
-                                <li className="offer__feature offer__feature--adults">
-                                    Max 4 adults
+                                    {offer.type}
                                 </li>
                             </ul>
                             <div className="offer__price">
                                 <b className="offer__price-value">€{offer.price}</b>
-                                <span className="offer__price-text">night</span>
+                                <span className="offer__price-text"> night</span>
                             </div>
                             <div className="offer__inside">
                                 <h2 className="offer__inside-title">What's inside</h2>
@@ -130,7 +101,7 @@ function Offer({offers}: OfferProps) {
                                         className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
                                         <img
                                             className="offer__avatar user__avatar"
-                                            src="img/avatar-angelina.jpg"
+                                            src={offer.host.avatarUrl}
                                             width="74"
                                             height="74"
                                             alt="Host avatar"
@@ -145,6 +116,7 @@ function Offer({offers}: OfferProps) {
                                     </p>
                                 </div>
                             </div>
+
                             <section className="offer__reviews reviews">
                                 <h2 className="reviews__title">
                                     Reviews &middot; <span className="reviews__amount">1</span>
@@ -185,7 +157,7 @@ function Offer({offers}: OfferProps) {
                             </section>
                         </div>
                     </div>
-                    <section className="offer__map map" style={{height: '579px'}}>Add commentMore actions
+                    <section className="offer__map map" style={{height: '579px'}}>
                         <CityMap cityLocation={offer.location} points={mapPoints}/>
                     </section>
                 </section>
@@ -194,102 +166,11 @@ function Offer({offers}: OfferProps) {
                         <h2 className="near-places__title">
                             Other places in the neighbourhood
                         </h2>
+
                         <div className="near-places__list places__list">
-                            <CitiesCardList offersList={otherOffers}/>
-
-                            <article className="near-places__card place-card">
-                                <div className="near-places__image-wrapper place-card__image-wrapper">
-                                    <a href="#">
-                                        <img
-                                            className="place-card__image"
-                                            src="img/apartment-02.jpg"
-                                            width="260"
-                                            height="200"
-                                            alt="Place image"
-                                        />
-                                    </a>
-                                </div>
-                                <div className="place-card__info">
-                                    <div className="place-card__price-wrapper">
-                                        <div className="place-card__price">
-                                            <b className="place-card__price-value">&euro;132</b>
-                                            <span className="place-card__price-text">&#47;&nbsp;night</span>
-                                        </div>
-                                        <button
-                                            className="place-card__bookmark-button button"
-                                            type="button"
-                                        >
-                                            <svg
-                                                className="place-card__bookmark-icon"
-                                                width="18"
-                                                height="19"
-                                            >
-                                                <use href="#icon-bookmark"></use>
-                                            </svg>
-                                            <span className="visually-hidden">To bookmarks</span>
-                                        </button>
-                                    </div>
-                                    <div className="place-card__rating rating">
-                                        <div className="place-card__stars rating__stars">
-                                            <span style={{width: "80%"}}></span>
-                                            <span className="visually-hidden">Rating</span>
-                                        </div>
-                                    </div>
-                                    <h2 className="place-card__name">
-                                        <a href="#">Canal View Prinsengracht</a>
-                                    </h2>
-                                    <p className="place-card__type">Apartment</p>
-                                </div>
-                            </article>
-
-                            <article className="near-places__card place-card">
-                                <div className="place-card__mark">
-                                    <span>Premium</span>
-                                </div>
-                                <div className="near-places__image-wrapper place-card__image-wrapper">
-                                    <a href="#">
-                                        <img
-                                            className="place-card__image"
-                                            src="img/apartment-03.jpg"
-                                            width="260"
-                                            height="200"
-                                            alt="Place image"
-                                        />
-                                    </a>
-                                </div>
-                                <div className="place-card__info">
-                                    <div className="place-card__price-wrapper">
-                                        <div className="place-card__price">
-                                            <b className="place-card__price-value">&euro;180</b>
-                                            <span className="place-card__price-text">&#47;&nbsp;night</span>
-                                        </div>
-                                        <button
-                                            className="place-card__bookmark-button button"
-                                            type="button"
-                                        >
-                                            <svg
-                                                className="place-card__bookmark-icon"
-                                                width="18"
-                                                height="19"
-                                            >
-                                                <use href="#icon-bookmark"></use>
-                                            </svg>
-                                            <span className="visually-hidden">To bookmarks</span>
-                                        </button>
-                                    </div>
-                                    <div className="place-card__rating rating">
-                                        <div className="place-card__stars rating__stars">
-                                            <span style={{width: "100%"}}></span>
-                                            <span className="visually-hidden">Rating</span>
-                                        </div>
-                                    </div>
-                                    <h2 className="place-card__name">
-                                        <a href="#">Nice, cozy, warm big bed apartment</a>
-                                    </h2>
-                                    <p className="place-card__type">Apartment</p>
-                                </div>
-                            </article>
+                           <CitiesCardList offerList={otherOffers} onListItemHover={() => {}}/>
                         </div>
+
                     </section>
                 </div>
             </main>

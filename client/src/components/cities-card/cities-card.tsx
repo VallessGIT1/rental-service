@@ -1,4 +1,3 @@
-import {useState} from "react";
 import {AppRoute} from "../../const";
 import {Link} from "react-router-dom";
 
@@ -9,13 +8,13 @@ type CitiesCardProps = {
     price: number
     isPremium: boolean
     previewImage: string
-    rating: number
+    rating: number,
+    onListItemHover: (offerId: string | null) => void
 }
 
-function CitiesCard({id, title, type, price, previewImage, isPremium, rating}: CitiesCardProps) {
-    const [, setOfferId]  = useState('')
+function CitiesCard({id, title, type, price, previewImage, isPremium, rating, onListItemHover}: CitiesCardProps) {
     return (
-        <article className="cities__card place-card" onMouseOver={() => setOfferId(id)} onMouseOut={() => setOfferId('')}>
+        <article className="cities__card place-card" onMouseOver={() => onListItemHover(id)} onMouseOut={() => onListItemHover(null)}>
             {isPremium && (
                 <div className="place-card__mark">
                     <span>Premium</span>

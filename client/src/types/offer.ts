@@ -34,7 +34,7 @@ export type FullOffer = {
   maxAdults: number;
 };
 
-export type OffersList = {
+export type OfferList = {
   id: string;
   title: string;
   type: string;
@@ -52,7 +52,7 @@ export type CityFavorites = {
   offers: FullOffer[];
 }
 
-export function mapFullOfferToOffersList(offers: FullOffer[]): OffersList[] {
+export function mapFullOfferToOffersList(offers: FullOffer[]): OfferList[] {
   return offers.map((offer) => ({
     id: offer.id,
     title: offer.title,
