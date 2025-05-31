@@ -1,7 +1,6 @@
 import {CitiesCardList} from "../../components/cities-card-list/cities-card-list"
 import {SortOptions} from "../../components/sort-options/sort-options"
 import {CitiesList} from "../../components/cities-list/cities-list"
-import {Logo} from "../../components/logo/logo"
 import CityMap from "../../components/map/map"
 import {OfferList} from "../../types/offer"
 import {getOffersByCity, sortOffersByType} from "../../utils"

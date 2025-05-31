@@ -7,15 +7,14 @@ const cityCoordinates = {
   Dusseldorf: {latitude: 51.2277, longitude: 6.7735, zoom: 13},
 };
 
-const getBaseUrl = () => `http://${process.env.HOST}:${process.env.PORT || 5000}`;
+const getBaseUrl = () => `http://${process.env.HOST}:${process.env.PORT
+|| 5000}`;
 const adaptOfferToClient = (offer) => {
   const baseUrl = getBaseUrl();
   const cityLocation = cityCoordinates[offer.city];
   let previewImage = offer.previewImage;
-  if (previewImage && !previewImage.startsWith("http")) {
-    previewImage = `${baseUrl}${
-        previewImage.startsWith("/") ? "" : "/"
-    }${previewImage}`;
+  if (previewImage) {
+    previewImage = `${baseUrl}${previewImage}`;
   }
   return {
     id: String(offer.id),
@@ -43,12 +42,6 @@ const adaptOfferToClient = (offer) => {
 const adaptFullOfferToClient = (offer) => {
   const baseUrl = getBaseUrl();
   const cityLocation = cityCoordinates[offer.city];
-  let previewImage = offer.previewImage;
-  if (previewImage && !previewImage.startsWith("http")) {
-    previewImage = `${baseUrl}${
-        previewImage.startsWith("/") ? "" : "/"
-    }${previewImage}`;
-  }
   return {
     id: String(offer.id),
     title: offer.title,
@@ -63,8 +56,9 @@ const adaptFullOfferToClient = (offer) => {
             ? {
               latitude: offer.latitude,
               longitude: offer.longitude,
+              zoom: 12
             }
-            : {latitude: 0, longitude: 0},
+            : {latitude: 0, longitude: 0, zoom: 0},
     isFavorite: offer.isFavorite,
     isPremium: offer.isPremium,
     rating: parseFloat(offer.rating),
@@ -72,8 +66,11 @@ const adaptFullOfferToClient = (offer) => {
     rooms: offer.rooms,
     bedrooms: offer.guests,
     goods: offer.features,
-    host: offer.author,
-    images: offer.photos,
+    host: {
+      ...offer.author,
+      avatarUrl: `${baseUrl}${offer.author.avatar}`
+    },
+    images: offer.photos.map(photo => `${baseUrl}${photo}`),
   };
 };
 

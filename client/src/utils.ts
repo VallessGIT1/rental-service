@@ -22,3 +22,18 @@ export function sortOffersByType(offers: OfferList[], type: SortOffer): OfferLis
       return offers;
   }
 }
+
+export const groupOffersByCity = (offers: OfferList[]): { city: string; offers: OfferList[] }[] => {
+  return Object.values(
+      offers.reduce<{ [key: string]: OfferList[] }>((acc, offer) => {
+        if (!acc[offer.city.name]) {
+          acc[offer.city.name] = [];
+        }
+        acc[offer.city.name].push(offer);
+        return acc;
+      }, {})
+  ).map(cityOffers => ({
+    city: cityOffers[0].city,
+    offers: cityOffers,
+  }));
+}

@@ -1,5 +1,7 @@
 import {CityOffer} from "./types/offer";
 
+export const BASE_API_URL = 'http://localhost:5001'
+
 export const AppRoute = {
   Main: '/',
   Login: '/login',
